@@ -1,0 +1,38 @@
+
+[
+  {
+    "outputFileName": "wwwroot/css/main.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+      "wwwroot/css/site.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "wwwroot/lib/bootstrap-rtl/dist/css/bootstrap-rtl.min.css",
+      "wwwroot/lib/font-awesome/css/font-awesome.min.css",
+      "wwwroot/lib/nprogress/nprogress.css",
+      "wwwroot/lib/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css",
+      "wwwroot/lib/iCheck/skins/flat/green.css",
+      "wwwroot/lib/bootstrap-daterangepicker/daterangepicker.css",
+      "wwwroot/css/custom.css"
+
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/jquery.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "wwwroot/lib/fastclick/lib/fastclick.js",
+      "wwwroot/lib/nprogress/nprogress.js",
+      "wwwroot/lib/bootstrap-progressbar/bootstrap-progressbar.min.js",
+      "wwwroot/lib/iCheck/icheck.min.js",
+      "wwwroot/lib/moment/min/moment.min.js",
+      "wwwroot/lib/bootstrap-daterangepicker/daterangepicker.js",
+      "wwwroot/js/custom.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

@@ -1,0 +1,289 @@
+﻿@{
+    ViewData["Title"] = "Refine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["section-titile-1"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class=" input-group-addon"><i class="fa fa-calendar"> تاریخ شروع  </i></span>
+                                <input id="stDate" type="date" name="startDate" class="form-control" placeholder="تاریخ شروع" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"> تاریخ پایان  </i></span>
+                                <input id="enDate" type="date" name="endtDate" class="form-control" placeholder="تاریخ پایان" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-check-square-o"></i></span>
+                                <select id="ruleId" class="form-control" name="ruleId" asp-items="@((SelectList)ViewData["RuleOptions"])">
+                                    <option value="">انتخاب قانون تخلف</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <button class="btn btn-success" onclick="sentDateGrid() ">جستجو</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset-md-3 col-md-4 offset-md-3">
+                        <button class="btn btn-dark" onclick="updateItems() "> نیاز به اقدام <i class="fa fa-bolt " style="color:yellow"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["section-titile-2"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="myGrid" class="ag-theme-alpine" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+    <script src="~/lib/grid/grid-et.min.js"></script>
+    <script src="~/lib/SweetAlert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+
+        const gridOptions = {
+            getRowId: params => params.data.id,
+            // each entry here represents one column
+            columnDefs: [
+                {
+                    field: "id",
+                    headerCheckboxSelection: true,
+                    headerCheckboxSelectionFilteredOnly: true,
+                    checkboxSelection: true,
+                },
+                { field: "date_id", filter: 'agMultiColumnFilter' },
+                { field: "rull_id", filter: 'agMultiColumnFilter' },
+                { field: "condition", filter: 'agMultiColumnFilter' },
+                { field: "period", filter: 'agMultiColumnFilter' },
+                { field: "price", filter: 'agMultiColumnFilter' },
+                { field: "typePeriod", filter: 'agMultiColumnFilter' },
+                { field: "risk", filter: 'agMultiColumnFilter' },
+                { field: "price", filter: 'agMultiColumnFilter' },
+                { field: "sourcePan", filter: 'agMultiColumnFilter' },
+                { field: "destinationSECPAN", filter: 'agMultiColumnFilter' },
+                { field: "encryptDestinationPAN", filter: 'agMultiColumnFilter' },
+                { field: "terminal", filter: 'agMultiColumnFilter' },
+                { field: "user_Id", filter: 'agMultiColumnFilter' },
+                { field: "guildTitle", filter: 'agMultiColumnFilter' },
+                { field: "bankBin", filter: 'agMultiColumnFilter' },
+                { field: "prCode_Id", filter: 'agMultiColumnFilter' },
+                { field: "posConnectionType", filter: 'agMultiColumnFilter' },
+                { field: "countOfTransaction_Success", filter: 'agMultiColumnFilter' },
+                { field: "countOfTransaction_unSuccess", filter: 'agMultiColumnFilter' },
+                { field: "amount_Success", filter: 'agMultiColumnFilter' },
+                { field: "amount_unSuccess", filter: 'agMultiColumnFilter' },
+                { field: "countOfTerminal", filter: 'agMultiColumnFilter' },
+                { field: "countOfSourcePan", filter: 'agMultiColumnFilter' },
+                { field: "countOfRepeat", filter: 'agMultiColumnFilter' },
+                { field: "diffTime1", filter: 'agMultiColumnFilter' },
+                { field: "diffTime2", filter: 'agMultiColumnFilter' },
+                { field: "p_Unsucsess", filter: 'agMultiColumnFilter' },
+                { field: "p_SorcePan", filter: 'agMultiColumnFilter' },
+                { field: "detail1", filter: 'agMultiColumnFilter' },
+                { field: "detail2", filter: 'agMultiColumnFilter' },
+                { field: "detail3", filter: 'agMultiColumnFilter' },
+                { field: "detail4", filter: 'agMultiColumnFilter' },
+                { field: "needToAction", filter: 'agMultiColumnFilter' },
+                { field: "editdate", filter: 'agMultiColumnFilter' },
+                { field: "userEdit", filter: 'agMultiColumnFilter' },
+            ],
+
+            // default col def properties get applied to all columns
+            defaultColDef: { sortable: true, filter: true, flex: 1, minWidth: 100, resizable: true, },
+            suppressRowClickSelection: true,
+            rowSelection: 'multiple', // allow rows to be selected
+            animateRows: true, // have rows animate to new positions when sorted
+            overlayNoRowsTemplate:
+                '<span style="padding: 10px; border: 2px solid #444; background: #5e344b; color :white">تعداد رکورد بازیابی شده باید کمتر از 700،000 باشد. تاریخ جستجو تغییر دهید</span>',
+            sideBar: {
+                toolPanels: [
+                    {
+                        id: 'columns',
+                        labelDefault: 'Columns',
+                        labelKey: 'columns',
+                        iconKey: 'columns',
+                        toolPanel: 'agColumnsToolPanel',
+                        toolPanelParams: {
+                            suppressRowGroups: true,
+                            suppressValues: true,
+                            suppressPivots: true,
+                            suppressPivotMode: true,
+                            suppressColumnFilter: false,
+                            suppressColumnSelectAll: false,
+                            suppressColumnExpandAll: true,
+                        },
+                    },
+                    {
+                        id: 'filters',
+                        labelDefault: 'Filters',
+                        labelKey: 'filters',
+                        iconKey: 'filter',
+                        toolPanel: 'agFiltersToolPanel',
+                        toolPanelParams: {
+                            suppressExpandAll: true,
+                            suppressFilterSearch: false,
+                        },
+                    },
+                ],
+                defaultToolPanel: 'columns',
+            },
+            statusBar: {
+                statusPanels: [
+                    { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+                    { statusPanel: 'agTotalRowCountComponent', align: 'center' },
+                    { statusPanel: 'agFilteredRowCountComponent' },
+                    { statusPanel: 'agSelectedRowCountComponent' },
+                    { statusPanel: 'agAggregationComponent' },
+                ],
+            },
+            //debug: true,
+        };
+
+        // setup the grid after the page has finished loading
+        document.addEventListener('DOMContentLoaded', function () {
+            var gridDiv = document.querySelector('#myGrid');
+            new agGrid.Grid(gridDiv, gridOptions);
+
+            fetch("/grid/RefineData")
+                .then(response => response.json())
+                .then(data => {
+                    // load fetched data into grid
+                    gridOptions.api.setRowData(data);
+                });
+
+
+        });
+
+        function sentDateGrid() {
+
+            var startDate = document.getElementById("stDate").value.replaceAll("-", "");
+            var endDate = document.getElementById("enDate").value.replaceAll("-", "");
+            var ruleId = document.getElementById("ruleId").value
+            var gridDiv = document.querySelector('#myGrid');
+            gridDiv.innerHTML = "";
+            new agGrid.Grid(gridDiv, gridOptions);
+            debugger;
+            fetch("/grid/RefineData?startDate=" + startDate + "&endDate=" + endDate + "&ruleId=" + ruleId)
+                .then(response => response.json())
+                .then(data => {
+                    gridOptions.api.setRowData(data);
+                });
+
+
+
+        }
+
+        function updateItems() {
+            Swal.fire({
+                title: 'در حال آپدیت!',
+                text: 'لطفا منتظر بمانید',
+                icon: 'info',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false
+
+            })
+
+            const itemsToUpdate = gridOptions.api.getSelectedRows();
+
+            const listId = []
+
+            itemsToUpdate.forEach(function (data,index) {
+                listId.push(data.id);
+                this[index].needToAction ="Yes";
+                this[index].editdate = new Date().toLocaleDateString();
+                this[index].userEdit ="@(User.Identity.Name)";
+            }, itemsToUpdate);
+                
+
+
+            const res = gridOptions.api.applyTransaction({ update: itemsToUpdate });
+            debugger;
+            $.ajax("/grid/RefineUpdate", {
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ listIds: listId }),
+                success: function (result) {
+                    Swal.fire({
+                        title: 'اتمام اپدیت!',
+                        text: 'آپدیت با موفقیت انجام شد',
+                        icon: 'success',
+
+                        confirmButtonText: 'بستن'
+
+                    })
+                },
+                error: function (err) {
+                    Swal.fire({
+                        title: 'خطا',
+                        text: 'آپدیت با خطا مواجه شد. تعداد رکورد کمتر از 10،000 باشد',
+                        icon: 'error',
+
+                        confirmButtonText: 'بستن'
+
+                    })
+                },
+            });
+        }
+    </script>
+
+}

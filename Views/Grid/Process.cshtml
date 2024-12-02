@@ -1,0 +1,393 @@
+﻿@{
+    ViewData["Title"] = "Refine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Style {
+    <style>
+        .tp-gold {
+            background-color: #aeafae87
+        }
+
+        .greenFont {
+            color: #26b99a;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["section-titile-1"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class=" input-group-addon"><i class="fa fa-check-circle-o"> </i></span>
+                                <select id="actionType" class="form-control" name="actionType" asp-items="@((SelectList)ViewData["actionTypeOption"])">
+                                    <option value="">نوع اقدام</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-dot-circle-o"></i></span>
+                                <select id="actionStatus" class="form-control" name="actionStatus" asp-items="@((SelectList)ViewData["actionStatusOption"])">
+                                    <option value="">وضعیت</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-group"></i></span>
+                                <select id="workGroup" class="form-control" name="workGroup" asp-items="@((SelectList)ViewData["workGroupption"])">
+                                    <option value="">ارجاع  به</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"> تاریخ انجام </i></span>
+                                <input id="actionDueDate" type="date" name="actionDueDate" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-comments-o"></i></span>
+                                <textarea id="description" name="description" class="form-control" placeholder="توضیحات"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 ">
+                        <button class="btn btn-success" onclick="updateItems() "> ثبت <i class="fa fa-save " style="color:aliceblue"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["section-titile-2"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="myGrid" class="ag-theme-alpine" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+    <script src="~/lib/grid/grid-et.min.js"></script>
+    <script src="~/lib/SweetAlert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        class CustomTooltip {
+            init(params) {
+                const eGui = (this.eGui = document.createElement('div'));
+                const color = params.color || 'white';
+                const data = params.api.getDisplayedRowAtIndex(params.rowIndex).data;
+
+                eGui.classList.add('custom-tooltip');
+                eGui.style['background-color'] = color;
+                eGui.innerHTML = `
+                                                    <p>
+                                                                        <span style="font-weight:bold"> : توضیحات  </span><br />
+                                                                ${data.description}
+                                                    </p>
+                                                `;
+            }
+
+            getGui() {
+                return this.eGui;
+            }
+        }
+        const gridOptions = {
+            getRowId: params => params.data.id,
+            // each entry here represents one column
+            columnDefs: [
+                {
+                    field: "id",
+                    headerCheckboxSelection: true,
+                    headerCheckboxSelectionFilteredOnly: true,
+                    checkboxSelection: true,
+                },
+                { field: "date_id", filter: 'agMultiColumnFilter', toolPanelClass: 'tp-gold' },
+                { field: "rull_id", filter: 'agMultiColumnFilter', toolPanelClass: 'tp-gold' },
+                { field: "condition", filter: 'agMultiColumnFilter', hide: true },
+                { field: "period", filter: 'agMultiColumnFilter', hide: true },
+                { field: "typePeriod", filter: 'agMultiColumnFilter', hide: true },
+                { field: "risk", filter: 'agMultiColumnFilter', hide: true },
+                { field: "sourcePan", filter: 'agMultiColumnFilter', hide: true },
+                { field: "destinationSECPAN", filter: 'agMultiColumnFilter', hide: true },
+                { field: "encryptDestinationPAN", filter: 'agMultiColumnFilter', hide: true },
+                { field: "terminal", filter: 'agMultiColumnFilter', toolPanelClass: 'tp-gold' },
+                { field: "user_Id", filter: 'agMultiColumnFilter', toolPanelClass: 'tp-gold' },
+                { field: "guildTitle", filter: 'agMultiColumnFilter', hide: true },
+                { field: "bankBin", filter: 'agMultiColumnFilter', hide: true },
+                { field: "prCode_Id", filter: 'agMultiColumnFilter', hide: true },
+                { field: "posConnectionType", filter: 'agMultiColumnFilter', hide: true },
+                { field: "countOfTransaction_Success", filter: 'agMultiColumnFilter', hide: true },
+                { field: "countOfTransaction_unSuccess", filter: 'agMultiColumnFilter', hide: true },
+                { field: "amount_Success", filter: 'agMultiColumnFilter', hide: true },
+                { field: "amount_unSuccess", filter: 'agMultiColumnFilter', hide: true },
+                { field: "countOfTerminal", filter: 'agMultiColumnFilter', hide: true },
+                { field: "countOfSourcePan", filter: 'agMultiColumnFilter', hide: true },
+                { field: "countOfRepeat", filter: 'agMultiColumnFilter', hide: true },
+                { field: "diffTime1", filter: 'agMultiColumnFilter', hide: true },
+                { field: "diffTime2", filter: 'agMultiColumnFilter', hide: true },
+                { field: "p_Unsucsess", filter: 'agMultiColumnFilter', hide: true },
+                { field: "p_SorcePan", filter: 'agMultiColumnFilter', hide: true },
+                { field: "detail1", filter: 'agMultiColumnFilter', hide: true },
+                { field: "detail2", filter: 'agMultiColumnFilter', hide: true },
+                { field: "detail3", filter: 'agMultiColumnFilter', hide: true },
+                { field: "detail4", filter: 'agMultiColumnFilter', hide: true },
+                { field: "actionType", filter: 'agMultiColumnFilter', headerName: "نوع اقدام", toolPanelClass: 'tp-gold' },
+                { field: "actionDueDate", filter: 'agMultiColumnFilter', headerName: "تاریخ انجام", toolPanelClass: 'tp-gold' },
+                { field: "actionStatus", filter: 'agMultiColumnFilter', headerName: "وضعیت", toolPanelClass: 'tp-gold' },
+                {
+                    field: "description", filter: 'agMultiColumnFilter', headerName: "توضیحات", toolPanelClass: 'tp-gold', tooltipField: 'description',
+                    tooltipComponentParams: { color: 'aliceblue' },
+                },
+                { field: "editdate", filter: 'agMultiColumnFilter', headerName: "تاریخ ویرایش", toolPanelClass: 'tp-gold' },
+                { field: "userEdit", filter: 'agMultiColumnFilter', headerName: "کاربر ویرایش کننده", toolPanelClass: 'tp-gold' },
+                { field: "workGroup", filter: 'agMultiColumnFilter', headerName: "گروه مسئول", toolPanelClass: 'tp-gold' }
+            ],
+
+            // default col def properties get applied to all columns
+            defaultColDef: { sortable: true, filter: true, flex: 1, minWidth: 100, resizable: true, tooltipComponent: CustomTooltip },
+            tooltipShowDelay: 0,
+            tooltipHideDelay: 6000,
+            suppressRowClickSelection: true,
+            rowSelection: 'multiple', // allow rows to be selected
+            animateRows: true, // have rows animate to new positions when sorted
+            overlayNoRowsTemplate:
+                '<span style="padding: 10px; border: 2px solid #444; background: #5e344b; color :white">داده ای یافت نشد</span>',
+            sideBar: {
+                toolPanels: [
+                    {
+                        id: 'columns',
+                        labelDefault: 'Columns',
+                        labelKey: 'columns',
+                        iconKey: 'columns',
+                        toolPanel: 'agColumnsToolPanel',
+                        toolPanelParams: {
+                            suppressRowGroups: true,
+                            suppressValues: true,
+                            suppressPivots: true,
+                            suppressPivotMode: true,
+                            suppressColumnFilter: false,
+                            suppressColumnSelectAll: false,
+                            suppressColumnExpandAll: true,
+                        },
+                    },
+                    {
+                        id: 'filters',
+                        labelDefault: 'Filters',
+                        labelKey: 'filters',
+                        iconKey: 'filter',
+                        toolPanel: 'agFiltersToolPanel',
+                        toolPanelParams: {
+                            suppressExpandAll: true,
+                            suppressFilterSearch: false,
+                        },
+                    },
+                ],
+                defaultToolPanel: 'columns',
+            },
+            statusBar: {
+                statusPanels: [
+                    { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+                    { statusPanel: 'agTotalRowCountComponent', align: 'center' },
+                    { statusPanel: 'agFilteredRowCountComponent' },
+                    { statusPanel: 'agSelectedRowCountComponent' },
+                    { statusPanel: 'agAggregationComponent' },
+                ],
+            },
+            getContextMenuItems: getContextMenuItems,
+            //debug: true,
+        };
+
+        // setup the grid after the page has finished loading
+        document.addEventListener('DOMContentLoaded', function () {
+            var gridDiv = document.querySelector('#myGrid');
+            new agGrid.Grid(gridDiv, gridOptions);
+
+            fetch("/grid/ProcessData")
+                .then(response => response.json())
+                .then(data => {
+                    // load fetched data into grid
+                    gridOptions.api.setRowData(data);
+                });
+
+
+        });
+
+        function updateItems() {
+
+            Swal.fire({
+                title: 'در حال آپدیت!',
+                text: 'لطفا منتظر بمانید',
+                icon: 'info',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false
+
+            })
+            var actionType = document.getElementById("actionType").value;
+            var actionStatus = document.getElementById("actionStatus").value;
+            var workGroup = document.getElementById("workGroup").value;
+            var actionDueDate = document.getElementById("actionDueDate").value.replaceAll("-", "/");
+            var description = document.getElementById("description").value;
+            const itemsToUpdate = gridOptions.api.getSelectedRows();
+
+
+
+            itemsToUpdate.forEach(function (data, index) {
+
+                this[index].actionType = actionType == "" ? this[index].actionType : actionType;
+                this[index].actionStatus = actionStatus == "" ? this[index].actionStatus : actionStatus;
+                this[index].workGroup = workGroup == "" ? this[index].workGroup : workGroup;
+                this[index].actionDueDate = actionDueDate == "" ? this[index].actionDueDate : actionDueDate;
+                this[index].description = description == "" ? this[index].description : description;
+                this[index].editdate = new Date().toLocaleDateString('zh-Hans-CN');
+                this[index].userEdit = "@(User.Identity.Name)";
+
+
+            }, itemsToUpdate);
+
+
+
+            const res = gridOptions.api.applyTransaction({ update: itemsToUpdate });
+            debugger;
+            $.ajax("/grid/ProcessUpdate", {
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ listRows: itemsToUpdate }),
+                success: function (result) {
+                    Swal.fire({
+                        title: 'اتمام اپدیت!',
+                        text: 'آپدیت با موفقیت انجام شد',
+                        icon: 'success',
+
+                        confirmButtonText: 'بستن'
+
+                    })
+                },
+                error: function (err) {
+                    debugger
+                    Swal.fire({
+                        title: 'خطا',
+                        text: 'آپدیت با خطا مواجه شد. ' + err.responseText,
+                        icon: 'error',
+
+                        confirmButtonText: 'بستن'
+
+                    })
+                },
+            });
+        }
+
+        function getContextMenuItems(params) {
+            debugger
+            var result = [
+                {
+                    // custom item
+                    name: 'چرخه ارجاع ',
+                    action: () => {
+                        $.ajax("/grid/ProcessCycle?id=" + params.node.id, {
+                            type: 'get',
+                            success: function (result) {
+
+                                Swal.fire({
+                                    title: 'چرخه ارجاع',
+                                    html: result,
+                                    width: '40vw',
+                                    grow: 'column',
+                                    background: 'floralwhite',
+                                    confirmButtonText: 'بستن'
+
+                                })
+                            },
+                            error: function (err) {
+                                debugger
+                                Swal.fire({
+                                    title: 'خطا',
+                                    text: 'آپدیت با خطا مواجه شد. ' + err.responseText,
+                                    icon: 'error',
+
+                                    confirmButtonText: 'بستن'
+
+                                })
+                            },
+                        });
+                    },
+                    cssClasses: ['greenFont', 'bold'],
+                    icon:
+                        '<i class="fa fa-random"></i>',
+                },
+                'separator',
+                'autoSizeAll',
+                'separator',
+                'copy',
+                'separator',
+                'copyWithHeaders',
+                'separator',
+                'export',
+
+            ];
+
+            return result;
+        }
+    </script>
+
+    }
